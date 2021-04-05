@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name: dado
-        image: docker pull lcastils/dado-api-mem:latest
+        image: lcastils/dado-api-mem:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
