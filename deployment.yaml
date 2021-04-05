@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dado-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dado-service
+  template:
+    metadata:
+      labels:
+        app: dado-service
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: dado
+        image: docker pull lcastils/dado-api-mem:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dado-service
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+  labels:
+    app: dado-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: dado-service
+      port: 8080
+  selector:
+    app: dado-service

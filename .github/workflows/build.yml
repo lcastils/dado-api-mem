@@ -25,3 +25,22 @@ jobs:
       run: docker build -t ${{ secrets.DOCKER_USER }}/dado-api-mem:latest .
     - name: Publish Docker image
       run: docker push ${{ secrets.DOCKER_USER }}/dado-api-mem:latest
+  k8s:
+      name: publish to okteto
+      runs-on: ubuntu-latest
+      needs: [build-and-push-image]
+      steps:
+      - name: checkout
+        uses: actions/checkout@master
+          
+      - uses: okteto/login@master
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+      - name: "Activate personal namespace"
+        uses: okteto/namespace@master
+        with:
+          namespace: lcastils
+      - name: "Create deployment"
+        uses: okteto/apply@master
+        with:
+          manifest: deployment.yaml
